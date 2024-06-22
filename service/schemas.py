@@ -1,29 +1,40 @@
+from typing import List
 from pydantic import BaseModel
 
 
-class Price(BaseModel):
-    min_value: int  # Value in kopecks
-    max_value: int  # Value in rubles
-    format: str  # Formatted string representation (e.g., "1 руб.")
+class Price(BaseModel): #Eto Value Object
+    min_value: int  # Копейки
+    max_value: int  # Рубли
+    format: str  
 
-class Time(BaseModel):
+
+class Time(BaseModel): #Eto toje Value Object
     seconds: int
     minutes: int
-
 
 
 class ServiceBase(BaseModel):
     name: str
 
+
 class ServiceCreate(ServiceBase):
-    price: int  # Price in rubles (for input)
-    time: int  # Time in minutes (for input)
+    price: float  
+    time: int  
 
 
-class Service(ServiceBase):
-    id: int
+class Service(ServiceBase): #a eto uje DTO 
+    id: int 
     price: Price
     time: Time
+
+    class Config:
+        orm_mode = True
+        from_attributes = True
+
+
+class ServiceListResponse(BaseModel):
+    total_count: int
+    services: List[Service]
 
     class Config:
         orm_mode = True

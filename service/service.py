@@ -1,8 +1,8 @@
 from fastapi import HTTPException
-from sqlalchemy import select
+from sqlalchemy import func, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from .import models, schemas
+from . import models, schemas
 from service.utils import convert_price_to_kopecks, convert_time_to_seconds
 
 
@@ -21,11 +21,18 @@ class ServiceService:
 
     async def get_services(
         self, skip: int = 0, limit: int = 100
-    ) -> list[models.Service]:
+    ) -> schemas.ServiceListResponse:
         query = select(models.Service).offset(skip).limit(limit)
+        count_query = select(func.count()).select_from(models.Service)
+
         result = await self.session.execute(query)
         services = result.scalars().all()
-        return services
+
+        count_result = await self.session.execute(count_query)
+        total_count = count_result.scalar()
+
+        return schemas.ServiceListResponse(total_count=total_count, services=services)
+    
 
     async def get_service_by_id(self, service_id: int) -> models.Service:
         query = select(models.Service).where(models.Service.id == service_id)

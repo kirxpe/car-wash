@@ -2,6 +2,7 @@ from sqlalchemy import Column, Integer, String, ForeignKey
 from sqlalchemy.orm import relationship
 from database import Base
 
+
 class Car(Base):
     __tablename__ = "cars"
 
@@ -10,6 +11,3 @@ class Car(Base):
     brand_id = Column(Integer, ForeignKey("brand.id"), nullable=False)
 
     brand = relationship("Brand", backref="cars")
-    
-    
-    

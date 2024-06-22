@@ -13,7 +13,7 @@ class Role(Base):
     name = Column(String, unique=True, nullable=False)
 
 
-#класс для библиотеки
+# класс для библиотеки
 class User(SQLAlchemyBaseUserTable[int], Base):
     id = Column(Integer, primary_key=True)
     email = Column(String, nullable=False)
@@ -25,10 +25,14 @@ class User(SQLAlchemyBaseUserTable[int], Base):
     patronymic = Column(String, nullable=False, default="")
     hashed_password: str = Column(String(length=1024), nullable=False)
     role = relationship("Role", backref="users")
-    is_send_notify = Column(Boolean, default = False, nullable=False)
-    #поля для библиотеки
+    is_send_notify = Column(Boolean, default=False, nullable=False)
+    # поля для библиотеки
     is_active: bool = Column(Boolean, default=True, nullable=False)
     is_superuser: bool = Column(Boolean, default=False, nullable=False)
     is_verified: bool = Column(Boolean, default=False, nullable=False)
-    employee_orders = relationship("Order", foreign_keys="[Order.employee_id]", back_populates="employee")
-    admin_orders = relationship("Order", foreign_keys="[Order.administrator_id]", back_populates="administrator")
+    employee_orders = relationship(
+        "Order", foreign_keys="[Order.employee_id]", back_populates="employee"
+    )
+    admin_orders = relationship(
+        "Order", foreign_keys="[Order.administrator_id]", back_populates="administrator"
+    )

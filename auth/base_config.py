@@ -7,10 +7,11 @@ from auth.models import User
 from config import SECRET_AUTH
 
 cookie_transport = CookieTransport(cookie_name="car-wash", cookie_max_age=3600)
-
+#добавить мета информацию (количество всех записей) при пагинации
 
 def get_jwt_strategy() -> JWTStrategy:
     return JWTStrategy(secret=SECRET_AUTH, lifetime_seconds=3600)
+
 
 auth_backend = AuthenticationBackend(
     name="jwt",

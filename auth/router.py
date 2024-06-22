@@ -12,7 +12,7 @@ from auth.schemas import UserRead
 router = APIRouter(prefix="/users", tags=["Users"])
 
 
-# Read All Users (Admin only)
+
 @router.get("/", response_model=List[UserRead], dependencies=[Depends(require_admin)])
 async def read_users(
     skip: int = 0, limit: int = 100, session: AsyncSession = Depends(get_async_session)
@@ -22,16 +22,19 @@ async def read_users(
     users = result.scalars().all()
     return users
 
-# Read Current User
+
+
 @router.get("/me", response_model=UserRead)
 async def read_user_me(current_user: User = Depends(get_current_user)):
     return current_user
 
 
-  
 
-# Delete User (Admin only)
-@router.delete("/{user_id}", status_code=status.HTTP_204_NO_CONTENT, dependencies=[Depends(require_admin)])
+@router.delete(
+    "/{user_id}",
+    status_code=status.HTTP_204_NO_CONTENT,
+    dependencies=[Depends(require_admin)],
+)
 async def delete_user(user_id: int, session: AsyncSession = Depends(get_async_session)):
     query = select(User).where(User.id == user_id)
     result = await session.execute(query)
